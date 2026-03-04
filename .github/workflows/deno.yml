@@ -1,44 +1,45 @@
 name: Deno CI
 
 on:
-push:
-branches: ["main"]
-pull_request:
-branches: ["main"]
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 permissions:
-contents: read
+  contents: read
 
 jobs:
-ci:
-runs-on: ubuntu-latest
+  ci:
+    name: Lint, Check, Test
+    runs-on: ubuntu-latest
 
-```
-strategy:
-  matrix:
-    deno-version: [v2.x]
+    strategy:
+      matrix:
+        deno-version: [v2.x]
 
-steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  - name: Setup Deno
-    uses: denoland/setup-deno@v2
-    with:
-      deno-version: ${{ matrix.deno-version }}
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: ${{ matrix.deno-version }}
 
-  - name: Cache dependencies
-    run: deno cache src/index.ts
+      - name: Cache dependencies
+        run: deno cache src/index.ts
 
-  - name: Check formatting
-    run: deno fmt --check
+      - name: Check formatting
+        run: deno fmt --check
 
-  - name: Lint
-    run: deno lint
+      - name: Run linter
+        run: deno lint
 
-  - name: Type check
-    run: deno check src/index.ts
+      - name: Type check
+        run: deno check src/index.ts
 
-  - name: Run tests
-    run: deno test -A
-```
+      - name: Run tests
+        run: deno test -A
