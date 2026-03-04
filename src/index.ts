@@ -1,13 +1,7 @@
-import { Application, Router } from "@oak/oak";
+import app from "./app.ts";
 
-const router = new Router();
+const PORT = Number(Deno.env.get("PORT")) || 8000;
 
-router.get("/", (ctx) => {
-  ctx.response.body = "Hello world";
-});
+console.log(`🚀 Server running on http://localhost:${PORT}`);
 
-const app = new Application();
-app.use(router.routes());
-app.use(router.allowedMethods());
-
-app.listen({ port: 8080 });
+await app.listen({ port: PORT });
