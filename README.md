@@ -1,5 +1,8 @@
 # Oak Boilerplate
-This is a boilerplate for building web applications using the Oak framework in Deno. It provides a basic structure for setting up routes, middleware, and handling requests.
+
+This is a boilerplate for building web applications using the Oak framework in
+Deno. It provides a basic structure for setting up routes, middleware, and
+handling requests.
 
 ```
 oak-api/
