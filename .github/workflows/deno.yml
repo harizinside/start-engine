@@ -1,42 +1,44 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-# This workflow will install Deno then run `deno lint` and `deno test`.
-# For more information see: https://github.com/denoland/setup-deno
-
-name: Deno
+name: Deno CI
 
 on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+push:
+branches: ["main"]
+pull_request:
+branches: ["main"]
 
 permissions:
-  contents: read
+contents: read
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+ci:
+runs-on: ubuntu-latest
 
-    steps:
-      - name: Setup repo
-        uses: actions/checkout@v4
+```
+strategy:
+  matrix:
+    deno-version: [v2.x]
 
-      - name: Setup Deno
-        # uses: denoland/setup-deno@v1
-        uses: denoland/setup-deno@61fe2df320078202e33d7d5ad347e7dcfa0e8f31  # v1.1.2
-        with:
-          deno-version: v1.x
+steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
 
-      # Uncomment this step to verify the use of 'deno fmt' on each commit.
-      # - name: Verify formatting
-      #   run: deno fmt --check
+  - name: Setup Deno
+    uses: denoland/setup-deno@v2
+    with:
+      deno-version: ${{ matrix.deno-version }}
 
-      - name: Run linter
-        run: deno lint
+  - name: Cache dependencies
+    run: deno cache src/index.ts
 
-      - name: Run tests
-        run: deno test -A
+  - name: Check formatting
+    run: deno fmt --check
+
+  - name: Lint
+    run: deno lint
+
+  - name: Type check
+    run: deno check src/index.ts
+
+  - name: Run tests
+    run: deno test -A
+```
